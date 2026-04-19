@@ -1,0 +1,62 @@
+[
+  {
+    "id": 1,
+    "title": "Forest Focus",
+    "tag": "Focus",
+    "duration": 180,
+    "thumbnail": "assets/images/forest.jpg",
+    "audio": "assets/audio/forest.mp3",
+    "description": "A calming forest environment with gentle wind and birds to enhance deep focus.",
+    "sensory": ["Breeze", "Mist", "Soft Light"]
+  },
+  {
+    "id": 2,
+    "title": "Ocean Calm",
+    "tag": "Calm",
+    "duration": 240,
+    "thumbnail": "assets/images/ocean.jpg",
+    "audio": "assets/audio/ocean.mp3",
+    "description": "Slow ocean waves to help you relax and unwind your thoughts.",
+    "sensory": ["Soft Waves", "Cool Breeze", "Sun Glow"]
+  },
+  {
+    "id": 3,
+    "title": "Night Rain",
+    "tag": "Sleep",
+    "duration": 300,
+    "thumbnail": "assets/images/rain.jpg",
+    "audio": "assets/audio/rain.mp3",
+    "description": "Gentle night rain with distant thunder for restful sleep.",
+    "sensory": ["Soft Rain", "Dark Sky", "Cool Air"]
+  },
+  {
+    "id": 4,
+    "title": "Morning Reset",
+    "tag": "Reset",
+    "duration": 150,
+    "thumbnail": "assets/images/morning.jpg",
+    "audio": "assets/audio/morning.mp3",
+    "description": "Fresh morning ambience to reset your mind and energy.",
+    "sensory": ["Warm Light", "Birdsong", "Fresh Air"]
+  },
+  {
+    "id": 5,
+    "title": "Mountain Silence",
+    "tag": "Focus",
+    "duration": 200,
+    "thumbnail": "assets/images/mountain.jpg",
+    "audio": "assets/audio/mountain.mp3",
+    "description": "Silent mountain air with distant wind for deep concentration.",
+    "sensory": ["Cold Breeze", "Silence", "Wide Space"]
+  },
+  {
+    "id": 6,
+    "title": "Campfire Relax",
+    "tag": "Calm",
+    "duration": 220,
+    "thumbnail": "assets/images/campfire.jpg",
+    "audio": "assets/audio/campfire.mp3",
+    "description": "Soft crackling fire under the stars to calm your mind.",
+    "sensory": ["Warm Light", "Fire Crackle", "Night Air"]
+  }
+]
