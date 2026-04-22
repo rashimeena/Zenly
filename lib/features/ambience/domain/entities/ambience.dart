@@ -1,4 +1,13 @@
 class Ambience {
+  final int id;
+  final String title;
+  final String tag;
+  final int duration;
+  final String thumbnail;
+  final String audio;
+  final String description;
+  final List<String> sensory;
+
   const Ambience({
     required this.id,
     required this.title,
@@ -10,20 +19,12 @@ class Ambience {
     required this.sensory,
   });
 
-  final int id;
-  final String title;
-  final String tag;
-  final int duration;
-  final String thumbnail;
-  final String audio;
-  final String description;
-  final List<String> sensory;
-
-  String get durationLabel => '${(duration / 60).round()} min';
-
   String get durationClockLabel {
     final minutes = duration ~/ 60;
     final seconds = duration % 60;
+    if (seconds == 0) {
+      return '$minutes:00';
+    }
     return '$minutes:${seconds.toString().padLeft(2, '0')}';
   }
 }
