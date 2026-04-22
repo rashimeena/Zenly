@@ -2,16 +2,29 @@ import 'package:ambience_app/shared/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 
 class MoodSelector extends StatefulWidget {
-  const MoodSelector({super.key});
+  final String initialMood;
+  final ValueChanged<String> onMoodChanged;
+
+  const MoodSelector({
+    super.key,
+    required this.initialMood,
+    required this.onMoodChanged,
+  });
 
   @override
   State<MoodSelector> createState() => _MoodSelectorState();
 }
 
 class _MoodSelectorState extends State<MoodSelector> {
-  String selected = "Grounded";
+  late String selected;
 
   final moods = ["Calm", "Grounded", "Energized", "Sleepy"];
+
+  @override
+  void initState() {
+    super.initState();
+    selected = widget.initialMood;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,6 +48,7 @@ class _MoodSelectorState extends State<MoodSelector> {
               selected: isSelected,
               onSelected: (_) {
                 setState(() => selected = mood);
+                widget.onMoodChanged(mood);
               },
               selectedColor: AppColors.primaryContainer,
             );

@@ -1,9 +1,13 @@
+import 'package:ambience_app/app/router.dart';
 import 'package:ambience_app/features/ambience/domain/entities/ambience.dart';
 import 'package:ambience_app/features/ambience/presentation/widgets/details_widgets.dart';
 import 'package:ambience_app/features/ambience/presentation/widgets/miniplayer.dart';
 import 'package:ambience_app/features/ambience/presentation/widgets/header.dart';
+import 'package:ambience_app/features/player/presentation/bloc/player_bloc.dart';
+import 'package:ambience_app/features/player/presentation/bloc/player_event.dart';
 import 'package:ambience_app/shared/theme/app_colors.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class AmbienceDetailsScreen extends StatelessWidget {
   const AmbienceDetailsScreen({super.key, this.ambience});
@@ -15,8 +19,8 @@ class AmbienceDetailsScreen extends StatelessWidget {
     title: 'Forest Focus',
     tag: 'Focus',
     duration: 180,
-    thumbnail: '',
-    audio: '',
+    thumbnail: 'assets/images/forest_focus.jpg',
+    audio: 'assets/audio/forest_focus.mp3',
     description:
         'Lose yourself in the gentle whispers of ancient pines and the distant song of morning birds. A sonic sanctuary designed to anchor your consciousness in the present moment through organic layering.',
     sensory: const ['Breeze', 'Warm Light', 'Mist', 'Binaural', 'Soft Rain'],
@@ -51,17 +55,16 @@ class AmbienceDetailsScreen extends StatelessWidget {
             ListView(
               padding: const EdgeInsets.fromLTRB(20, 14, 20, 152),
               children: [
-                AmbienceTopBar(
+                const AmbienceTopBar(
                   title: 'Ambience Details',
                   showBackButton: true,
-                  avatarImage:
-                      'https://lh3.googleusercontent.com/aida-public/AB6AXuDO0WpBdAVBPxJ5SE978s9LmBaFb7fmMuoj0tEj-jK_2Fo6eBLafYjhiL9KNUTVmuDHXijw_tkRAlE_eFNklGVIGIn5ap-vNMPETqR3vGQu0ArM1cb48LC7EYgxeDMRgtkV6Ylks_19HPPN2u31ND65zTpRa6Ea9NrUjYoFFjv54E7Q5mTxYYo1hwATGpJhBpacNxeguBbKRgiaW6QaP3wvlPzWoVPR1n8DkcG7wLDEOSs56S_Dx1UflA5p4WZPPj-yJaks_FfNC8',
                 ),
                 const SizedBox(height: 18),
                 AmbienceHeroCard(
                   title: current.title,
                   tag: current.tag,
                   subtitle: 'Soft air, warm light, gentle motion',
+                  imagePath: current.imagePath,
                 ),
                 const SizedBox(height: 18),
                 Text(
@@ -79,13 +82,13 @@ class AmbienceDetailsScreen extends StatelessWidget {
                     Icon(
                       Icons.schedule_rounded,
                       size: 18,
-                      color: AppColors.primary.withOpacity(0.88),
+                      color: AppColors.primary.withValues(alpha: 0.88),
                     ),
                     const SizedBox(width: 6),
                     Text(
                       current.durationClockLabel,
                       style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                            color: AppColors.onSurface.withOpacity(0.74),
+                            color: AppColors.onSurface.withValues(alpha: 0.74),
                             fontWeight: FontWeight.w500,
                           ),
                     ),
@@ -103,7 +106,7 @@ class AmbienceDetailsScreen extends StatelessWidget {
                 Text(
                   'Sensory recipe',
                   style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                        color: AppColors.onSurface.withOpacity(0.7),
+                        color: AppColors.onSurface.withValues(alpha: 0.7),
                         letterSpacing: 1.8,
                         fontWeight: FontWeight.w700,
                       ),
@@ -117,22 +120,32 @@ class AmbienceDetailsScreen extends StatelessWidget {
                       .toList(growable: false),
                 ),
                 const SizedBox(height: 28),
-                SizedBox(
-                  width: double.infinity,
-                  height: 56,
+                ConstrainedBox(
+                  constraints: const BoxConstraints(
+                    minHeight: 56,
+                    minWidth: double.infinity,
+                  ),
                   child: ElevatedButton(
-                    onPressed: () {},
-                    child: const Text('Start Session'),
+                    onPressed: () {
+                      context.read<PlayerBloc>().add(PlayAmbienceEvent(current));
+                      Navigator.of(context).pushNamed(AppRouter.player);
+                    },
+                    child: const FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Text('Start Session'),
+                    ),
                   ),
                 ),
               ],
             ),
-            const Positioned(
+            Positioned(
               left: 16,
               right: 16,
               bottom: 14,
               child: AmbienceMiniPlayer(
-                title: 'Morning Mist',
+                onTap: () {
+                  Navigator.of(context).pushNamed(AppRouter.player);
+                },
               ),
             ),
           ],

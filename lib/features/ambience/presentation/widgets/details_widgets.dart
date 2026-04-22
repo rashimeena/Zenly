@@ -8,11 +8,13 @@ class AmbienceHeroCard extends StatelessWidget {
     required this.title,
     required this.tag,
     required this.subtitle,
+    required this.imagePath,
   });
 
   final String title;
   final String tag;
   final String subtitle;
+  final String imagePath;
 
   @override
   Widget build(BuildContext context) {
@@ -22,14 +24,17 @@ class AmbienceHeroCard extends StatelessWidget {
       height: 300,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(30),
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: palette,
+        image: DecorationImage(
+          image: AssetImage(imagePath),
+          fit: BoxFit.cover,
+          colorFilter: ColorFilter.mode(
+            Colors.black.withValues(alpha: 0.15),
+            BlendMode.darken,
+          ),
         ),
         boxShadow: [
           BoxShadow(
-            color: palette.first.withOpacity(0.25),
+            color: palette.first.withValues(alpha: 0.25),
             blurRadius: 30,
             offset: const Offset(0, 14),
           ),
@@ -40,12 +45,12 @@ class AmbienceHeroCard extends StatelessWidget {
           Positioned(
             left: -20,
             top: -16,
-            child: _Glow(size: 108, color: Colors.white.withOpacity(0.22)),
+            child: _Glow(size: 108, color: Colors.white.withValues(alpha: 0.22)),
           ),
           Positioned(
             right: -24,
             top: 44,
-            child: _Glow(size: 80, color: Colors.white.withOpacity(0.16)),
+            child: _Glow(size: 80, color: Colors.white.withValues(alpha: 0.16)),
           ),
           Positioned(
             left: 18,
@@ -58,7 +63,7 @@ class AmbienceHeroCard extends StatelessWidget {
                 AmbienceCircleIconButton(
                   icon: Icons.more_horiz_rounded,
                   onTap: () {},
-                  fill: Colors.white.withOpacity(0.16),
+                  fill: Colors.white.withValues(alpha: 0.16),
                 ),
               ],
             ),
@@ -70,9 +75,9 @@ class AmbienceHeroCard extends StatelessWidget {
             child: Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: Colors.black.withOpacity(0.12),
+                color: Colors.black.withValues(alpha: 0.12),
                 borderRadius: BorderRadius.circular(24),
-                border: Border.all(color: Colors.white.withOpacity(0.18)),
+                border: Border.all(color: Colors.white.withValues(alpha: 0.18)),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -95,7 +100,7 @@ class AmbienceHeroCard extends StatelessWidget {
                         child: Text(
                           subtitle,
                           style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                                color: Colors.white.withOpacity(0.9),
+                                color: Colors.white.withValues(alpha: 0.9),
                               ),
                         ),
                       ),
@@ -124,9 +129,9 @@ class AmbienceRecipeChip extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
       decoration: BoxDecoration(
-        color: AppColors.surfaceContainerHigh.withOpacity(0.72),
+        color: AppColors.surfaceContainerHigh.withValues(alpha: 0.72),
         borderRadius: BorderRadius.circular(99),
-        border: Border.all(color: Colors.white.withOpacity(0.55)),
+        border: Border.all(color: Colors.white.withValues(alpha: 0.55)),
       ),
       child: Text(
         label,
@@ -152,15 +157,15 @@ class AmbienceTagPill extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.15),
+        color: Colors.black.withValues(alpha: 0.2),
         borderRadius: BorderRadius.circular(99),
-        border: Border.all(color: Colors.white.withOpacity(0.18)),
+        border: Border.all(color: Colors.white.withValues(alpha: 0.25)),
       ),
       child: Text(
         label.toUpperCase(),
         style: Theme.of(context).textTheme.labelSmall?.copyWith(
               color: Colors.white,
-              fontWeight: FontWeight.w700,
+              fontWeight: FontWeight.w800,
               letterSpacing: 1.2,
             ),
       ),
@@ -183,7 +188,7 @@ class AmbienceCircleIconButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: fill ?? AppColors.surfaceContainerHigh.withOpacity(0.82),
+      color: fill ?? AppColors.surfaceContainerHigh.withValues(alpha: 0.82),
       shape: const CircleBorder(),
       child: InkWell(
         onTap: onTap,

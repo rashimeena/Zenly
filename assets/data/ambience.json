@@ -4,8 +4,8 @@
     "title": "Forest Focus",
     "tag": "Focus",
     "duration": 180,
-    "thumbnail": "assets/images/forest.jpg",
-    "audio": "assets/audio/forest.mp3",
+    "thumbnail": "assets/images/forest_focus.jpg",
+    "audio": "assets/audio/forest_focus.mp3",
     "description": "A calming forest environment with gentle wind and birds to enhance deep focus.",
     "sensory": ["Breeze", "Mist", "Soft Light"]
   },
@@ -14,8 +14,8 @@
     "title": "Ocean Calm",
     "tag": "Calm",
     "duration": 240,
-    "thumbnail": "assets/images/ocean.jpg",
-    "audio": "assets/audio/ocean.mp3",
+    "thumbnail": "assets/images/ocean_calm.jpg",
+    "audio": "assets/audio/ocean_calm.mp3",
     "description": "Slow ocean waves to help you relax and unwind your thoughts.",
     "sensory": ["Soft Waves", "Cool Breeze", "Sun Glow"]
   },
@@ -24,8 +24,8 @@
     "title": "Night Rain",
     "tag": "Sleep",
     "duration": 300,
-    "thumbnail": "assets/images/rain.jpg",
-    "audio": "assets/audio/rain.mp3",
+    "thumbnail": "assets/images/night_rain.jpg",
+    "audio": "assets/audio/night_rain.mp3",
     "description": "Gentle night rain with distant thunder for restful sleep.",
     "sensory": ["Soft Rain", "Dark Sky", "Cool Air"]
   },
@@ -34,8 +34,8 @@
     "title": "Morning Reset",
     "tag": "Reset",
     "duration": 150,
-    "thumbnail": "assets/images/morning.jpg",
-    "audio": "assets/audio/morning.mp3",
+    "thumbnail": "assets/images/morning_reset.jpg",
+    "audio": "assets/audio/morning_reset.mp3",
     "description": "Fresh morning ambience to reset your mind and energy.",
     "sensory": ["Warm Light", "Birdsong", "Fresh Air"]
   },
@@ -44,8 +44,8 @@
     "title": "Mountain Silence",
     "tag": "Focus",
     "duration": 200,
-    "thumbnail": "assets/images/mountain.jpg",
-    "audio": "assets/audio/mountain.mp3",
+    "thumbnail": "assets/images/mountain_silence.jpg",
+    "audio": "assets/audio/mountain_silence.mp3",
     "description": "Silent mountain air with distant wind for deep concentration.",
     "sensory": ["Cold Breeze", "Silence", "Wide Space"]
   },
@@ -54,8 +54,8 @@
     "title": "Campfire Relax",
     "tag": "Calm",
     "duration": 220,
-    "thumbnail": "assets/images/campfire.jpg",
-    "audio": "assets/audio/campfire.mp3",
+    "thumbnail": "assets/images/campfire_relax.jpg",
+    "audio": "assets/audio/campfire_relax.mp3",
     "description": "Soft crackling fire under the stars to calm your mind.",
     "sensory": ["Warm Light", "Fire Crackle", "Night Air"]
   }

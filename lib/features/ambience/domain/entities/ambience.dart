@@ -27,4 +27,6 @@ class Ambience {
     }
     return '$minutes:${seconds.toString().padLeft(2, '0')}';
   }
+
+  String get imagePath => thumbnail;
 }

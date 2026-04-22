@@ -1,17 +1,18 @@
+
 import 'package:ambience_app/shared/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 
 class SaveSection extends StatelessWidget {
-  const SaveSection({super.key});
+  final VoidCallback onSave;
+
+  const SaveSection({super.key, required this.onSave});
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         ElevatedButton(
-          onPressed: () {
-            Navigator.pop(context); // later → save + go history
-          },
+          onPressed: onSave,
           style: ElevatedButton.styleFrom(
             backgroundColor: AppColors.primaryContainer,
             minimumSize: const Size(double.infinity, 55),

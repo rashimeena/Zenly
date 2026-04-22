@@ -6,24 +6,30 @@ class StatsCards extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Expanded(
-          child: _card(
-            icon: Icons.timer,
-            title: "Focus Duration",
-            value: "45 min",
-          ),
-        ),
-        const SizedBox(width: 10),
-        Expanded(
-          child: _card(
-            icon: Icons.favorite,
-            title: "Heart Rate",
-            value: "62 BPM",
-          ),
-        ),
-      ],
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final isWide = constraints.maxWidth > 400;
+
+        return Row(
+          children: [
+            Expanded(
+              child: _card(
+                icon: Icons.timer_outlined,
+                title: "Session Time",
+                value: "45 min",
+              ),
+            ),
+            SizedBox(width: isWide ? 16 : 10),
+            Expanded(
+              child: _card(
+                icon: Icons.favorite_border_rounded,
+                title: "Avg Heart Rate",
+                value: "62 BPM",
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 
@@ -35,7 +41,7 @@ class StatsCards extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppColors.primaryContainer.withOpacity(0.2),
+        color: AppColors.primaryContainer.withValues(alpha: 0.2),
         borderRadius: BorderRadius.circular(16),
       ),
       child: Column(

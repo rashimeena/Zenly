@@ -81,7 +81,7 @@ class AppTheme {
         onSecondary: Colors.white,
         surface: surfaceColor,
         onSurface: textPrimary,
-        surfaceVariant: AppColors.surfaceVariant,
+        surfaceContainerHighest: AppColors.surfaceVariant,
         onSurfaceVariant: AppColors.onSurfaceVariant,
         primaryContainer: AppColors.primaryContainer,
         onPrimaryContainer: AppColors.onPrimaryContainer,
@@ -145,7 +145,7 @@ class AppTheme {
 
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
-        fillColor: AppColors.surfaceContainerHigh.withOpacity(0.8),
+        fillColor: AppColors.surfaceContainerHigh.withValues(alpha: 0.8),
         hintStyle: GoogleFonts.inter(color: textSecondary, fontSize: 16),
         contentPadding: const EdgeInsets.symmetric(
           horizontal: 20,
@@ -153,15 +153,15 @@ class AppTheme {
         ),
         prefixIconColor: textSecondary,
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(99),
+          borderRadius: BorderRadius.circular(16),
           borderSide: BorderSide.none,
         ),
         enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(99),
+          borderRadius: BorderRadius.circular(16),
           borderSide: BorderSide.none,
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(99),
+          borderRadius: BorderRadius.circular(16),
           borderSide: BorderSide.none,
         ),
       ),

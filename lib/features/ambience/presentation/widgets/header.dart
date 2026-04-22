@@ -7,29 +7,25 @@ class AmbienceTopBar extends StatelessWidget {
     required this.title,
     this.showBackButton = false,
     this.onBackPressed,
-    this.onSearchPressed,
-    this.avatarImage,
+    this.rightWidget,
   });
 
   final String title;
   final bool showBackButton;
   final VoidCallback? onBackPressed;
-  final VoidCallback? onSearchPressed;
-  final String? avatarImage;
+  final Widget? rightWidget;
 
   @override
   Widget build(BuildContext context) {
-    final leadingIcon = showBackButton ? Icons.arrow_back_rounded : Icons.search_rounded;
-
     return Row(
       children: [
-        _CircleIconButton(
-          icon: leadingIcon,
-          onTap: showBackButton
-              ? (onBackPressed ?? () => Navigator.of(context).pop())
-              : (onSearchPressed ?? () {}),
-        ),
-        const SizedBox(width: 12),
+        if (showBackButton) ...[
+          AmbienceCircleIconButton(
+            icon: Icons.arrow_back_rounded,
+            onTap: onBackPressed ?? () => Navigator.of(context).pop(),
+          ),
+          const SizedBox(width: 12),
+        ],
         Expanded(
           child: Text(
             title,
@@ -39,11 +35,8 @@ class AmbienceTopBar extends StatelessWidget {
                 ),
           ),
         ),
-        _ProfileAvatar(
-          image: avatarImage ??
-              'https://lh3.googleusercontent.com/aida-public/AB6AXuDO0WpBdAVBPxJ5SE978s9LmBaFb7fmMuoj0tEj-jK_2Fo6eBLafYjhiL9KNUTVmuDHXijw_tkRAlE_eFNklGVIGIn5ap-vNMPETqR3vGQu0ArM1cb48LC7EYgxeDMRgtkV6Ylks_19HPPN2u31ND65zTpRa6Ea9NrUjYoFFjv54E7Q5mTxYYo1hwATGpJhBpacNxeguBbKRgiaW6QaP3wvlPzWoVPR1n8DkcG7wLDEOSs56S_Dx1UflA5p4WZPPj-yJaks_FfNC8',
-        ),
-      ],
+        rightWidget,
+      ].whereType<Widget>().toList(),
     );
   }
 }
@@ -58,43 +51,58 @@ class AmbienceGreeting extends StatelessWidget {
   final String name;
   final String subtitle;
 
+  String _getGreeting() {
+    final hour = DateTime.now().hour;
+    if (hour < 12) return 'Good morning';
+    if (hour < 17) return 'Good afternoon';
+    return 'Good evening';
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'Good morning,',
-          style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                fontSize: 31,
-                height: 1.05,
-                color: AppColors.onSurface,
-              ),
-        ),
-        Text(
-          '$name.',
-          style: Theme.of(context).textTheme.displayLarge?.copyWith(
-                fontSize: 48,
-                height: 1.0,
-                color: AppColors.onSurface,
-                fontWeight: FontWeight.w500,
-              ),
-        ),
-        const SizedBox(height: 12),
-        Text(
-          subtitle,
-          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                fontSize: 15,
-                height: 1.45,
-              ),
-        ),
-      ],
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final isSmall = constraints.maxWidth < 350;
+
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              '${_getGreeting()},',
+              style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                    fontSize: isSmall ? 24 : 28,
+                    height: 1.05,
+                    color: AppColors.onSurface,
+                  ),
+            ),
+            Text(
+              '$name.',
+              style: Theme.of(context).textTheme.displayLarge?.copyWith(
+                    fontSize: isSmall ? 36 : 42,
+                    height: 1.0,
+                    color: AppColors.onSurface,
+                    fontWeight: FontWeight.w500,
+                  ),
+            ),
+            const SizedBox(height: 12),
+            Text(
+              subtitle,
+              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                    fontSize: isSmall ? 13 : 15,
+                    height: 1.45,
+                    color: AppColors.onSurface.withValues(alpha: 0.7),
+                  ),
+            ),
+          ],
+        );
+      },
     );
   }
 }
 
-class _CircleIconButton extends StatelessWidget {
-  const _CircleIconButton({
+class AmbienceCircleIconButton extends StatelessWidget {
+  const AmbienceCircleIconButton({
+    super.key,
     required this.icon,
     required this.onTap,
   });
@@ -105,7 +113,7 @@ class _CircleIconButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: AppColors.surfaceContainerHigh.withOpacity(0.8),
+      color: AppColors.surfaceContainerHigh.withValues(alpha: 0.8),
       shape: const CircleBorder(),
       child: InkWell(
         onTap: onTap,
@@ -114,28 +122,6 @@ class _CircleIconButton extends StatelessWidget {
           width: 38,
           height: 38,
           child: Icon(icon, size: 18, color: AppColors.onSurface),
-        ),
-      ),
-    );
-  }
-}
-
-class _ProfileAvatar extends StatelessWidget {
-  const _ProfileAvatar({required this.image});
-
-  final String image;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: 34,
-      height: 34,
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        border: Border.all(color: Colors.white.withOpacity(0.7), width: 1.5),
-        image: DecorationImage(
-          image: NetworkImage(image),
-          fit: BoxFit.cover,
         ),
       ),
     );

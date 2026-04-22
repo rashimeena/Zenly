@@ -1,7 +1,8 @@
-import 'package:ambience_app/features/ambience/data/data_sources/ambience_local_datasource.dart';
-import 'package:ambience_app/features/ambience/data/repositories/ambience_repository_impl.dart';
+import 'package:ambience_app/app/router.dart';
 import 'package:ambience_app/features/ambience/domain/entities/ambience.dart';
-import 'package:ambience_app/features/ambience/presentation/screens/ambience_details_screen.dart';
+import 'package:ambience_app/features/ambience/presentation/bloc/ambience_bloc.dart';
+import 'package:ambience_app/features/ambience/presentation/bloc/ambience_event.dart';
+import 'package:ambience_app/features/ambience/presentation/bloc/ambience_state.dart';
 import 'package:ambience_app/features/ambience/presentation/widgets/ambience_card.dart';
 import 'package:ambience_app/features/ambience/presentation/widgets/filter_chips.dart';
 import 'package:ambience_app/features/ambience/presentation/widgets/header.dart';
@@ -9,6 +10,7 @@ import 'package:ambience_app/features/ambience/presentation/widgets/miniplayer.d
 import 'package:ambience_app/features/ambience/presentation/widgets/searchbar.dart';
 import 'package:ambience_app/shared/theme/app_colors.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class AmbienceHomeScreen extends StatefulWidget {
   const AmbienceHomeScreen({super.key});
@@ -20,12 +22,7 @@ class AmbienceHomeScreen extends StatefulWidget {
 class _AmbienceHomeScreenState extends State<AmbienceHomeScreen> {
   static const _tags = ['All', 'Focus', 'Calm', 'Sleep', 'Reset'];
 
-  final _repository = const AmbienceRepositoryImpl(AmbienceLocalDataSource());
   final _searchController = TextEditingController();
-
-  String _query = '';
-  String _selectedTag = 'All';
-  late final Future<List<Ambience>> _ambiencesFuture = _repository.getAmbiences();
 
   @override
   void dispose() {
@@ -33,23 +30,29 @@ class _AmbienceHomeScreenState extends State<AmbienceHomeScreen> {
     super.dispose();
   }
 
-  List<Ambience> _applyFilters(List<Ambience> ambiences) {
-    return ambiences.where((ambience) {
-      final matchesSearch = _query.isEmpty ||
-          ambience.title.toLowerCase().contains(_query) ||
-          ambience.description.toLowerCase().contains(_query) ||
-          ambience.tag.toLowerCase().contains(_query);
-      final matchesTag = _selectedTag == 'All' || ambience.tag == _selectedTag;
-      return matchesSearch && matchesTag;
-    }).toList(growable: false);
+  void _onSearchChanged(String query) {
+    final state = context.read<AmbienceBloc>().state;
+    if (state is AmbienceLoaded) {
+      context.read<AmbienceBloc>().add(FilterAmbiencesEvent(
+            query: query,
+            tag: state.selectedTag,
+          ));
+    }
+  }
+
+  void _onTagSelected(String tag) {
+    final state = context.read<AmbienceBloc>().state;
+    if (state is AmbienceLoaded) {
+      context.read<AmbienceBloc>().add(FilterAmbiencesEvent(
+            query: state.query,
+            tag: tag,
+          ));
+    }
   }
 
   void _clearFilters() {
-    setState(() {
-      _query = '';
-      _selectedTag = 'All';
-      _searchController.clear();
-    });
+    _searchController.clear();
+    context.read<AmbienceBloc>().add(const FilterAmbiencesEvent());
   }
 
   @override
@@ -74,34 +77,39 @@ class _AmbienceHomeScreenState extends State<AmbienceHomeScreen> {
                 ),
               ),
             ),
-            FutureBuilder<List<Ambience>>(
-              future: _ambiencesFuture,
-              builder: (context, snapshot) {
-                final isLoading = snapshot.connectionState == ConnectionState.waiting;
-                final hasError = snapshot.hasError;
-                final ambiences = snapshot.data ?? const <Ambience>[];
-                final filteredAmbiences = _applyFilters(ambiences);
+            BlocBuilder<AmbienceBloc, AmbienceState>(
+              builder: (context, state) {
+                final isLoading = state is AmbienceLoading;
+                final hasError = state is AmbienceError;
+                final filteredAmbiences = state is AmbienceLoaded ? state.filteredAmbiences : const <Ambience>[];
+                final selectedTag = state is AmbienceLoaded ? state.selectedTag : 'All';
 
                 return ListView(
                   padding: const EdgeInsets.fromLTRB(20, 14, 20, 160),
                   children: [
-                    const AmbienceTopBar(title: 'The Sanctuary'),
+                    AmbienceTopBar(
+                      title: 'Zenly',
+                      rightWidget: AmbienceCircleIconButton(
+                        icon: Icons.history_rounded,
+                        onTap: () => Navigator.pushNamed(context, AppRouter.history),
+                      ),
+                    ),
                     const SizedBox(height: 22),
                     const AmbienceGreeting(
-                      name: 'Elias',
+                      name: 'Username',
                       subtitle:
                           'Find your frequency in our curated library of atmospheric sounds.',
                     ),
                     const SizedBox(height: 22),
                     AmbienceSearchBar(
                       controller: _searchController,
-                      onChanged: (value) => setState(() => _query = value.trim().toLowerCase()),
+                      onChanged: _onSearchChanged,
                     ),
-                    const SizedBox(height: 14),
+                    const SizedBox(height: 20),
                     AmbienceFilterChips(
                       tags: _tags,
-                      selectedTag: _selectedTag,
-                      onSelected: (tag) => setState(() => _selectedTag = tag),
+                      selectedTag: selectedTag,
+                      onSelected: _onTagSelected,
                     ),
                     const SizedBox(height: 18),
                     if (isLoading)
@@ -110,35 +118,73 @@ class _AmbienceHomeScreenState extends State<AmbienceHomeScreen> {
                         child: Center(child: CircularProgressIndicator()),
                       )
                     else if (hasError)
-                      _ErrorState(onRetry: () => setState(() {}))
+                      _ErrorState(onRetry: () => context.read<AmbienceBloc>().add(LoadAmbiencesEvent()))
                     else if (filteredAmbiences.isEmpty)
                       _EmptyState(onClearFilters: _clearFilters)
                     else
-                      ...filteredAmbiences.map(
-                        (ambience) => Padding(
-                          padding: const EdgeInsets.only(bottom: 16),
-                          child: AmbienceListCard(
-                            ambience: ambience,
-                            onTap: () {
-                              Navigator.of(context).push(
-                                MaterialPageRoute(
-                                  builder: (_) => AmbienceDetailsScreen(ambience: ambience),
+                      LayoutBuilder(
+                        builder: (context, constraints) {
+                          final crossAxisCount = constraints.maxWidth > 900
+                              ? 3
+                              : constraints.maxWidth > 600
+                                  ? 2
+                                  : 1;
+
+                          if (crossAxisCount > 1) {
+                            return GridView.builder(
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: crossAxisCount,
+                                crossAxisSpacing: 16,
+                                mainAxisSpacing: 16,
+                                childAspectRatio: 1.5,
+                              ),
+                              itemCount: filteredAmbiences.length,
+                              itemBuilder: (context, index) {
+                                return AmbienceListCard(
+                                  ambience: filteredAmbiences[index],
+                                  onTap: () {
+                                    Navigator.of(context).pushNamed(
+                                      AppRouter.details,
+                                      arguments: filteredAmbiences[index],
+                                    );
+                                  },
+                                );
+                              },
+                            );
+                          }
+
+                          return Column(
+                            children: filteredAmbiences.map(
+                              (ambience) => Padding(
+                                padding: const EdgeInsets.only(bottom: 16),
+                                child: AmbienceListCard(
+                                  ambience: ambience,
+                                  onTap: () {
+                                    Navigator.of(context).pushNamed(
+                                      AppRouter.details,
+                                      arguments: ambience,
+                                    );
+                                  },
                                 ),
-                              );
-                            },
-                          ),
-                        ),
+                              ),
+                            ).toList(),
+                          );
+                        },
                       ),
                   ],
                 );
               },
             ),
-            const Positioned(
+            Positioned(
               left: 16,
               right: 16,
               bottom: 14,
               child: AmbienceMiniPlayer(
-                title: 'Morning Mist',
+                onTap: () {
+                  Navigator.of(context).pushNamed(AppRouter.player);
+                },
               ),
             ),
           ],

@@ -1,25 +1,28 @@
+import 'package:ambience_app/app/router.dart';
+import 'package:ambience_app/features/journal/domain/entities/journal_entity.dart';
 import 'package:ambience_app/shared/theme/app_colors.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class JournalCard extends StatelessWidget {
-  final String title;
-  final String date;
-  final String mood;
-  final String preview;
+  final JournalEntity journal;
 
   const JournalCard({
     super.key,
-    required this.title,
-    required this.date,
-    required this.mood,
-    required this.preview,
+    required this.journal,
   });
 
   @override
   Widget build(BuildContext context) {
+    final dateStr = DateFormat('MMM dd, h:mm a').format(journal.createdAt);
+
     return GestureDetector(
       onTap: () {
-        // TODO: navigate to detail screen
+        Navigator.pushNamed(
+          context,
+          AppRouter.journalDetail,
+          arguments: journal,
+        );
       },
       child: Container(
         margin: const EdgeInsets.only(bottom: 16),
@@ -38,11 +41,11 @@ class JournalCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      date,
+                      dateStr,
                       style: const TextStyle(fontSize: 12),
                     ),
                     Text(
-                      title,
+                      journal.title,
                       style: const TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
@@ -51,32 +54,26 @@ class JournalCard extends StatelessWidget {
                     ),
                   ],
                 ),
-                Chip(label: Text(mood)),
-              ],
-            ),
-
-            const SizedBox(height: 10),
-
-            Text(
-              preview,
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-            ),
-
-            const SizedBox(height: 10),
-
-            Row(
-              children: const [
-                Text(
-                  "Read full reflection",
-                  style: TextStyle(
-                    color: AppColors.primary,
-                    fontWeight: FontWeight.w600,
+                Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: AppColors.primaryContainer,
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Text(
+                    journal.mood,
+                    style: const TextStyle(fontSize: 12),
                   ),
                 ),
-                SizedBox(width: 4),
-                Icon(Icons.arrow_forward, size: 16),
               ],
+            ),
+            const SizedBox(height: 10),
+            Text(
+              journal.content,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(color: Colors.black54),
             ),
           ],
         ),

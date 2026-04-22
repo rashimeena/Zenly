@@ -1,9 +1,12 @@
+import 'package:ambience_app/features/journal/presentation/bloc/journal_bloc.dart';
+import 'package:ambience_app/features/journal/presentation/bloc/journal_state.dart';
 import 'package:ambience_app/shared/theme/app_colors.dart';
 import 'package:flutter/material.dart';
-import '../widgets/history_topbar.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../widgets/top_bar.dart';
+import '../widgets/journal_page_header.dart';
 import '../widgets/journal_card.dart';
-import '../widgets/bento_journal_card.dart';
-import '../widgets/floating_button.dart';
+
 
 class HistoryScreen extends StatelessWidget {
   const HistoryScreen({super.key});
@@ -12,66 +15,91 @@ class HistoryScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.background,
-      floatingActionButton: const FloatingTriggerButton(),
       body: SafeArea(
         child: Column(
           children: [
-            const HistoryTopBar(),
-
+            const JournalTopBar(
+              showBackButton: true,
+              title: "Reflections",
+              titleStyle: TextStyle(
+                fontSize: 22,
+                fontWeight: FontWeight.bold,
+                color: AppColors.onSurface,
+              ),
+            ),
             Expanded(
-              child: ListView(
-                padding: const EdgeInsets.all(16),
-                children: [
-                  const SizedBox(height: 10),
+              child: BlocBuilder<JournalBloc, JournalState>(
+                builder: (context, state) {
+                  if (state is JournalLoading) {
+                    return const Center(child: CircularProgressIndicator());
+                  } else if (state is JournalLoaded) {
+                    final journals = state.journals.reversed.toList();
 
-                  const Text(
-                    "Past Journeys",
-                    style: TextStyle(
-                      fontSize: 32,
-                      fontWeight: FontWeight.bold,
-                      color: AppColors.onSurface,
-                    ),
-                  ),
+                    if (journals.isEmpty) {
+                      return const Center(
+                        child: Text("No reflections found yet."),
+                      );
+                    }
 
-                  const SizedBox(height: 6),
+                    return LayoutBuilder(
+                      builder: (context, constraints) {
+                        final crossAxisCount = constraints.maxWidth > 800 ? 2 : 1;
 
-                  const Text(
-                    "Revisit the stillness you’ve found.",
-                    style: TextStyle(color: Colors.black54),
-                  ),
+                        if (crossAxisCount > 1) {
+                          return GridView.builder(
+                            padding: const EdgeInsets.all(16),
+                            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 2,
+                              crossAxisSpacing: 16,
+                              mainAxisSpacing: 4,
+                              childAspectRatio: 1.8,
+                            ),
+                            itemCount: journals.length + 1,
+                            itemBuilder: (context, index) {
+                              if (index == 0) {
+                                return const JournalPageHeader(
+                                  title: "Past Journeys",
+                                  subtitle: "Revisit the stillness you’ve found.",
+                                  titleSize: 32,
+                                  titleWeight: FontWeight.bold,
+                                  spacing: 6,
+                                );
+                              }
+                              return JournalCard(journal: journals[index - 1]);
+                            },
+                          );
+                        }
 
-                  const SizedBox(height: 20),
-
-                  // Normal Cards
-                  JournalCard(
-                    title: "Forest Focus",
-                    date: "Oct 24, 8:30 AM",
-                    mood: "Grounded",
-                    preview:
-                        "The sound of rain hitting the leaves brought clarity...",
-                  ),
-
-                  JournalCard(
-                    title: "Midnight Stream",
-                    date: "Oct 22, 10:15 PM",
-                    mood: "Calm",
-                    preview:
-                        "Preparing for sleep was easier after tonight's session...",
-                  ),
-
-                  // Bento Card
-                  const BentoJournalCard(),
-
-                  JournalCard(
-                    title: "Urban Zen",
-                    date: "Oct 18, 12:30 PM",
-                    mood: "Focused",
-                    preview:
-                        "Even in the middle of city noise, I found my center...",
-                  ),
-
-                  const SizedBox(height: 120),
-                ],
+                        return ListView.builder(
+                          padding: const EdgeInsets.all(16),
+                          itemCount: journals.length + 1,
+                          itemBuilder: (context, index) {
+                            if (index == 0) {
+                              return const Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  SizedBox(height: 10),
+                                  JournalPageHeader(
+                                    title: "Past Journeys",
+                                    subtitle: "Revisit the stillness you’ve found.",
+                                    titleSize: 32,
+                                    titleWeight: FontWeight.bold,
+                                    spacing: 6,
+                                  ),
+                                  SizedBox(height: 20),
+                                ],
+                              );
+                            }
+                            return JournalCard(journal: journals[index - 1]);
+                          },
+                        );
+                      },
+                    );
+                  } else if (state is JournalError) {
+                    return Center(child: Text(state.message));
+                  }
+                  return const SizedBox.shrink();
+                },
               ),
             ),
           ],

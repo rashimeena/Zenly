@@ -1,20 +1,23 @@
 import 'package:flutter/material.dart';
 
 class JournalInput extends StatelessWidget {
-  const JournalInput({super.key});
+  final TextEditingController controller;
+
+  const JournalInput({super.key, required this.controller});
 
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
         TextField(
+          controller: controller,
           maxLines: 10,
           decoration: InputDecoration(
             hintText: "Start typing your reflection here...",
             filled: true,
             fillColor: const Color(0xFFEAEBC6),
             border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(16),
+              borderRadius: BorderRadius.circular(12),
               borderSide: BorderSide.none,
             ),
             contentPadding: const EdgeInsets.all(20),
