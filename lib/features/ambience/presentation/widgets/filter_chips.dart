@@ -1,63 +1,45 @@
+import 'package:ambience_app/shared/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 
-class FilterChips extends StatelessWidget {
-  const FilterChips({super.key});
+class AmbienceFilterChips extends StatelessWidget {
+  const AmbienceFilterChips({
+    super.key,
+    required this.tags,
+    required this.selectedTag,
+    required this.onSelected,
+  });
+
+  final List<String> tags;
+  final String selectedTag;
+  final ValueChanged<String> onSelected;
 
   @override
   Widget build(BuildContext context) {
-    final filters = ["All", "Focus", "Calm", "Sleep", "Reset"];
+    return SizedBox(
+      height: 42,
+      child: ListView.separated(
+        scrollDirection: Axis.horizontal,
+        itemCount: tags.length,
+        separatorBuilder: (_, __) => const SizedBox(width: 10),
+        itemBuilder: (context, index) {
+          final tag = tags[index];
+          final selected = tag == selectedTag;
 
-    return Column(
-      children: [
-        SizedBox(
-          height: 48,
-          child: ListView.separated(
-            scrollDirection: Axis.horizontal,
-            itemCount: filters.length,
-            padding: const EdgeInsets.symmetric(horizontal: 4),
-            separatorBuilder: (_, __) => const SizedBox(width: 12),
-            itemBuilder: (_, index) {
-              final isSelected = index == 0;
-
-              return ChoiceChip(
-                label: Text(filters[index]),
-                selected: isSelected,
-                onSelected: (_) {},
-              );
-            },
-          ),
-        ),
-        const SizedBox(height: 12),
-        // Custom Scroll Indicator
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 4),
-          child: Row(
-            children: [
-              const Icon(Icons.arrow_left, size: 12, color: Colors.grey),
-              Expanded(
-                child: Container(
-                  height: 4,
-                  decoration: BoxDecoration(
-                    color: Colors.grey.withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(2),
-                  ),
-                  child: FractionallySizedBox(
-                    alignment: Alignment.centerLeft,
-                    widthFactor: 0.3,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: Colors.grey,
-                        borderRadius: BorderRadius.circular(2),
-                      ),
-                    ),
-                  ),
+          return ChoiceChip(
+            label: Text(tag),
+            selected: selected,
+            onSelected: (_) => onSelected(tag),
+            labelStyle: Theme.of(context).textTheme.labelLarge?.copyWith(
+                  fontWeight: selected ? FontWeight.w600 : FontWeight.w500,
+                  color: selected ? Colors.white : AppColors.onSurface,
                 ),
-              ),
-              const Icon(Icons.arrow_right, size: 12, color: Colors.grey),
-            ],
-          ),
-        ),
-      ],
+            selectedColor: AppColors.primary,
+            backgroundColor: AppColors.surfaceContainerHigh,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(99)),
+            side: BorderSide.none,
+          );
+        },
+      ),
     );
   }
 }

@@ -1,256 +1,141 @@
+import 'package:ambience_app/features/ambience/domain/entities/ambience.dart';
+import 'package:ambience_app/features/ambience/presentation/widgets/details_widgets.dart';
+import 'package:ambience_app/features/ambience/presentation/widgets/miniplayer.dart';
+import 'package:ambience_app/features/ambience/presentation/widgets/header.dart';
+import 'package:ambience_app/shared/theme/app_colors.dart';
 import 'package:flutter/material.dart';
-import '../widgets/header.dart';
-import '../widgets/miniplayer.dart';
 
 class AmbienceDetailsScreen extends StatelessWidget {
-  const AmbienceDetailsScreen({super.key});
+  const AmbienceDetailsScreen({super.key, this.ambience});
+
+  final Ambience? ambience;
+
+  static const Ambience _fallback = Ambience(
+    id: 1,
+    title: 'Forest Focus',
+    tag: 'Focus',
+    duration: 180,
+    thumbnail: '',
+    audio: '',
+    description:
+        'Lose yourself in the gentle whispers of ancient pines and the distant song of morning birds. A sonic sanctuary designed to anchor your consciousness in the present moment through organic layering.',
+    sensory: const ['Breeze', 'Warm Light', 'Mist', 'Binaural', 'Soft Rain'],
+  );
+
+  Ambience get _current => ambience ?? _fallback;
 
   @override
   Widget build(BuildContext context) {
+    final current = _current;
+
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.surface,
-      body: Stack(
-        children: [
-          SafeArea(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.fromLTRB(20, 16, 20, 180),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: const [
-                  TopBarWidget(showBackButton: true),
-                  SizedBox(height: 24),
-                  DetailsHeroImage(),
-                  SizedBox(height: 32),
-                  DetailsHeader(),
-                  SizedBox(height: 24),
-                  DetailsDescription(),
-                  SizedBox(height: 32),
-                  SensoryLayers(),
-                  SizedBox(height: 40),
-                  StartSessionButton(),
-                ],
-              ),
-            ),
-          ),
-          const Positioned(
-            bottom: 32,
-            left: 20,
-            right: 20,
-            child: MiniPlayer(),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class DetailsHeroImage extends StatelessWidget {
-  const DetailsHeroImage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      height: 400,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(24),
-        boxShadow: [
-          BoxShadow(
-            color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
-            blurRadius: 32,
-            offset: const Offset(0, 12),
-          ),
-        ],
-        image: const DecorationImage(
-          image: NetworkImage(
-            "https://lh3.googleusercontent.com/aida-public/AB6AXuB48_ewGR1KLOAex0YuFH6KQocwlbfipMEwL87cI0vQ30IJb7pIsYioVjJmCO6geCAnnQE0hMzJs7mVwfXfQBo09YZ-LVVvvxJ5ZBt_P6k0zkm1FBrQeg4UGM-71sQPj46j39fcRPC64mEcmYP-BZF3w3LPt3aAXy0rBmnTgtyIrtfe2NXkq9SJukljeUhPDD7Xo-ycdzMYlvUP5_ZwUUO1awmp0Rx63iRhGNwA_29MMgKuI4FpnbVMoNy4OCPayRNMgIxhAkikmGM",
-          ),
-          fit: BoxFit.cover,
-        ),
-      ),
-      child: Stack(
-        children: [
-          Positioned(
-            bottom: 24,
-            left: 24,
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
-              decoration: BoxDecoration(
-                color: Colors.black.withOpacity(0.2),
-                borderRadius: BorderRadius.circular(99),
-                border: Border.all(color: Colors.white.withOpacity(0.2)),
-              ),
-              child: Text(
-                "FOCUS",
-                style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      letterSpacing: 2,
-                    ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class DetailsHeader extends StatelessWidget {
-  const DetailsHeader({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          "Forest Focus",
-          style: Theme.of(context).textTheme.displayLarge?.copyWith(
-                fontSize: 56,
-                height: 1.0,
-              ),
-        ),
-        const SizedBox(height: 12),
-        Row(
+      backgroundColor: AppColors.background,
+      body: SafeArea(
+        child: Stack(
           children: [
-            Icon(
-              Icons.schedule,
-              size: 20,
-              color: Theme.of(context).colorScheme.primary,
-            ),
-            const SizedBox(width: 8),
-            Text(
-              "45:00",
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                    fontWeight: FontWeight.w300,
-                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+            Positioned.fill(
+              child: Container(
+                decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      Color(0xFFFDFDE6),
+                      Color(0xFFF7F5CE),
+                      Color(0xFFF2F0B8),
+                    ],
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
                   ),
-            ),
-          ],
-        ),
-      ],
-    );
-  }
-}
-
-class DetailsDescription extends StatelessWidget {
-  const DetailsDescription({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Text(
-      "Lose yourself in the gentle whispers of ancient pines and the distant song of morning birds. A sonic sanctuary designed to anchor your consciousness in the present moment through organic layering.",
-      style: Theme.of(context).textTheme.bodyLarge,
-    );
-  }
-}
-
-class SensoryLayers extends StatelessWidget {
-  const SensoryLayers({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    final layers = [
-      (Icons.air, "Breeze"),
-      (Icons.mist, "Mist"),
-      (Icons.wb_sunny_outlined, "Warm Light"),
-      (Icons.umbrella_outlined, "Soft Rain"),
-    ];
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          "SENSORY LAYERS",
-          style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                fontWeight: FontWeight.bold,
-                letterSpacing: 2,
-              ),
-        ),
-        const SizedBox(height: 16),
-        Wrap(
-          spacing: 12,
-          runSpacing: 12,
-          children: layers.map((layer) => _LayerChip(icon: layer.$1, label: layer.$2)).toList(),
-        ),
-      ],
-    );
-  }
-}
-
-class _LayerChip extends StatelessWidget {
-  final IconData icon;
-  final String label;
-
-  const _LayerChip({required this.icon, required this.label});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surfaceVariant.withOpacity(0.5),
-        borderRadius: BorderRadius.circular(99),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(icon, size: 18, color: Theme.of(context).colorScheme.onSurfaceVariant),
-          const SizedBox(width: 8),
-          Text(
-            label,
-            style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                  fontWeight: FontWeight.w500,
                 ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class StartSessionButton extends StatelessWidget {
-  const StartSessionButton({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      height: 64,
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [
-            Theme.of(context).colorScheme.primary,
-            Theme.of(context).colorScheme.primaryContainer,
-          ],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Theme.of(context).colorScheme.primary.withOpacity(0.2),
-            blurRadius: 20,
-            offset: const Offset(0, 8),
-          ),
-        ],
-      ),
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          onTap: () {},
-          borderRadius: BorderRadius.circular(16),
-          child: const Center(
-            child: Text(
-              "Start Session",
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
               ),
             ),
-          ),
+            ListView(
+              padding: const EdgeInsets.fromLTRB(20, 14, 20, 152),
+              children: [
+                AmbienceTopBar(
+                  title: 'Ambience Details',
+                  showBackButton: true,
+                  avatarImage:
+                      'https://lh3.googleusercontent.com/aida-public/AB6AXuDO0WpBdAVBPxJ5SE978s9LmBaFb7fmMuoj0tEj-jK_2Fo6eBLafYjhiL9KNUTVmuDHXijw_tkRAlE_eFNklGVIGIn5ap-vNMPETqR3vGQu0ArM1cb48LC7EYgxeDMRgtkV6Ylks_19HPPN2u31ND65zTpRa6Ea9NrUjYoFFjv54E7Q5mTxYYo1hwATGpJhBpacNxeguBbKRgiaW6QaP3wvlPzWoVPR1n8DkcG7wLDEOSs56S_Dx1UflA5p4WZPPj-yJaks_FfNC8',
+                ),
+                const SizedBox(height: 18),
+                AmbienceHeroCard(
+                  title: current.title,
+                  tag: current.tag,
+                  subtitle: 'Soft air, warm light, gentle motion',
+                ),
+                const SizedBox(height: 18),
+                Text(
+                  current.title,
+                  style: Theme.of(context).textTheme.displaySmall?.copyWith(
+                        fontSize: 34,
+                        height: 1.02,
+                        color: AppColors.onSurface,
+                        fontWeight: FontWeight.w500,
+                      ),
+                ),
+                const SizedBox(height: 8),
+                Row(
+                  children: [
+                    Icon(
+                      Icons.schedule_rounded,
+                      size: 18,
+                      color: AppColors.primary.withOpacity(0.88),
+                    ),
+                    const SizedBox(width: 6),
+                    Text(
+                      current.durationClockLabel,
+                      style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                            color: AppColors.onSurface.withOpacity(0.74),
+                            fontWeight: FontWeight.w500,
+                          ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 14),
+                Text(
+                  current.description,
+                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                        height: 1.55,
+                        fontSize: 15,
+                      ),
+                ),
+                const SizedBox(height: 26),
+                Text(
+                  'Sensory recipe',
+                  style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                        color: AppColors.onSurface.withOpacity(0.7),
+                        letterSpacing: 1.8,
+                        fontWeight: FontWeight.w700,
+                      ),
+                ),
+                const SizedBox(height: 12),
+                Wrap(
+                  spacing: 10,
+                  runSpacing: 10,
+                  children: current.sensory
+                      .map((chip) => AmbienceRecipeChip(label: chip))
+                      .toList(growable: false),
+                ),
+                const SizedBox(height: 28),
+                SizedBox(
+                  width: double.infinity,
+                  height: 56,
+                  child: ElevatedButton(
+                    onPressed: () {},
+                    child: const Text('Start Session'),
+                  ),
+                ),
+              ],
+            ),
+            const Positioned(
+              left: 16,
+              right: 16,
+              bottom: 14,
+              child: AmbienceMiniPlayer(
+                title: 'Morning Mist',
+              ),
+            ),
+          ],
         ),
       ),
     );

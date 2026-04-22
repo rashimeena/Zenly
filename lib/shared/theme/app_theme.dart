@@ -24,8 +24,6 @@ class AppTheme {
     required Color textPrimary,
     required Color textSecondary,
   }) {
-    final isDark = brightness == Brightness.dark;
-
     return ThemeData(
       useMaterial3: true,
       brightness: brightness,
