@@ -228,7 +228,7 @@ class _EmptyState extends StatelessWidget {
       margin: const EdgeInsets.only(top: 36),
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        color: AppColors.surfaceContainerHigh.withOpacity(0.65),
+        color: AppColors.surfaceContainerHigh.withValues(alpha: 0.65),
         borderRadius: BorderRadius.circular(28),
       ),
       child: Column(

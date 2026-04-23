@@ -23,7 +23,7 @@ class AmbienceDetailsScreen extends StatelessWidget {
     audio: 'assets/audio/forest_focus.mp3',
     description:
         'Lose yourself in the gentle whispers of ancient pines and the distant song of morning birds. A sonic sanctuary designed to anchor your consciousness in the present moment through organic layering.',
-    sensory: const ['Breeze', 'Warm Light', 'Mist', 'Binaural', 'Soft Rain'],
+    sensory: ['Breeze', 'Warm Light', 'Mist', 'Binaural', 'Soft Rain'],
   );
 
   Ambience get _current => ambience ?? _fallback;

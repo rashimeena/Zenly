@@ -1,5 +1,4 @@
 import 'package:equatable/equatable.dart';
-import '../../domain/entities/ambience.dart';
 
 abstract class AmbienceEvent extends Equatable {
   const AmbienceEvent();

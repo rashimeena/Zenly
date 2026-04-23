@@ -161,18 +161,16 @@ class _Artwork extends StatelessWidget {
 class _TagPill extends StatelessWidget {
   const _TagPill({
     required this.label,
-    this.compact = false,
   });
 
   final String label;
-  final bool compact;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(
-        horizontal: compact ? 10 : 12,
-        vertical: compact ? 5 : 6,
+      padding: const EdgeInsets.symmetric(
+        horizontal: 12,
+        vertical: 6,
       ),
       decoration: BoxDecoration(
         color: AppColors.primary.withValues(alpha: 0.1),
